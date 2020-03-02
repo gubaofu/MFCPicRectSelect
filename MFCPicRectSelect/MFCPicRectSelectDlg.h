@@ -69,4 +69,5 @@ public:
 	CString m_sRectSelect;
 	int m_iValueX;
 	int m_iValueY;
+	afx_msg void OnStnDblclickStaticPic();
 };

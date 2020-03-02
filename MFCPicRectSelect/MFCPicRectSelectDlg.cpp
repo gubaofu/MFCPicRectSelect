@@ -6,6 +6,7 @@
 #include "MFCPicRectSelect.h"
 #include "MFCPicRectSelectDlg.h"
 #include "afxdialogex.h"
+#include "DialogImage.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -86,6 +87,7 @@ BEGIN_MESSAGE_MAP(CMFCPicRectSelectDlg, CDialogEx)
 	ON_WM_LBUTTONDOWN()
 	ON_WM_LBUTTONUP()
 	ON_WM_TIMER()
+	ON_STN_DBLCLK(IDC_STATIC_PIC, &CMFCPicRectSelectDlg::OnStnDblclickStaticPic)
 END_MESSAGE_MAP()
 
 
@@ -198,6 +200,9 @@ void CMFCPicRectSelectDlg::OnBnClickedOk()
 	show_picture();
 	// 启动ID为1的定时器
 	SetTimer(1, 50, NULL);
+
+	DialogImage dg;
+	dg.DoModal();
 }
 
 BOOL CMFCPicRectSelectDlg::show_picture()
@@ -209,7 +214,7 @@ BOOL CMFCPicRectSelectDlg::show_picture()
 	CString imgPath;//图片路径
 
 	TCHAR DirectoryBuffer[1024] = {'\0'};
-	GetCurrentDirectory(1024, (LPWSTR)DirectoryBuffer);
+	GetCurrentDirectory(1024, DirectoryBuffer);
 	imgPath.Format(_T("%s\\Test.bmp"),DirectoryBuffer);
 
 	image.Load(imgPath);
@@ -467,13 +472,6 @@ void CMFCPicRectSelectDlg::OnLButtonDown(UINT nFlags, CPoint point)
 		else
 		{
 			m_bMove = false;
-
-			//CClientDC dc(&m_pictureControl);
-			//dc.SetROP2(R2_NOT);
-			//dc.SelectStockObject(NULL_BRUSH);
-			////消隐最后的一个矩形（其原理跟拖动时矩形框绘制原理相同）
-			//dc.Rectangle(m_rcOld);
-
 			m_rcNew = CRect(point, point);
 			DrawRect();
 		}
@@ -549,4 +547,10 @@ void CMFCPicRectSelectDlg::DrawRect()
 	newBrush.DeleteObject();
 
 	m_rcOld = m_rcNew;
+}
+
+void CMFCPicRectSelectDlg::OnStnDblclickStaticPic()
+{
+	// TODO: 在此添加控件通知处理程序代码
+	DrawRect();
 }
